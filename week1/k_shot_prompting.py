@@ -7,7 +7,27 @@ load_dotenv()
 NUM_RUNS_TIMES = 5
 
 # TODO: Fill this in!
-YOUR_SYSTEM_PROMPT = ""
+YOUR_SYSTEM_PROMPT = """
+You are a precise string reversal assistant. Your task is to reverse the character order of any given word.
+
+Here are some examples:
+Input: "cat"
+Output: "tac"
+
+Input: "dog"
+Output: "god"
+
+Input: "hello"
+Output: "olleh"
+
+Input: "status"
+Output: "sutats"
+
+Input: "openai"
+Output: "ianepo"
+
+Follow these examples strictly. When the user gives you a word, reverse it completely and output ONLY the reversed word — nothing else, no explanation, no punctuation, no extra text.
+"""
 
 USER_PROMPT = """
 Reverse the order of letters in the following word. Only output the reversed word, no other text:

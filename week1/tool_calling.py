@@ -70,7 +70,15 @@ TOOL_REGISTRY: Dict[str, Callable[..., str]] = {
 # ==========================
 
 # TODO: Fill this in!
-YOUR_SYSTEM_PROMPT = ""
+YOUR_SYSTEM_PROMPT = f"""
+You are a helpful assistant with tool calling capabilities. Output only a single JSON object.
+You must call the tool named "output_every_func_return_type".
+File path is {__file__}
+Use this exact format:
+{{"tool": "tool name", "args": {{"file_path": "file path"}}}}
+Do not add markdown, explanations, or additional keys.
+If file_path is unknow, use an empty string.
+"""
 
 
 def resolve_path(p: str) -> str:

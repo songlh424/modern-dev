@@ -56,7 +56,7 @@ def YOUR_CONTEXT_PROVIDER(corpus: List[str]) -> List[str]:
 
     For example, return [] to simulate missing context, or [corpus[0]] to include the API docs.
     """
-    return []
+    return [corpus[0]]
 
 
 def make_user_prompt(question: str, context_docs: List[str]) -> str:
@@ -93,6 +93,7 @@ def test_your_prompt(system_prompt: str, context_provider: Callable[[List[str]],
     """Run up to NUM_RUNS_TIMES and return True if any output matches EXPECTED_OUTPUT."""
     context_docs = context_provider(CORPUS)
     user_prompt = make_user_prompt(QUESTION, context_docs)
+    print(f"user prompt: {user_prompt}")
 
     for idx in range(NUM_RUNS_TIMES):
         print(f"Running test {idx + 1} of {NUM_RUNS_TIMES}")

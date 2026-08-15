@@ -8,7 +8,23 @@ load_dotenv()
 NUM_RUNS_TIMES = 5
 
 # TODO: Fill this in!
-YOUR_SYSTEM_PROMPT = ""
+YOUR_SYSTEM_PROMPT = """
+You are a careful math solver. Use step-by-step reasoning internally.
+Always put the final result on the last line exactly as: Answer: <number>.
+
+When solving modular exponent problems:
+- Look for cycles (e.g., powers modulo 10, 20, 25, 100).
+- Use Euler's totient or Carmichael function when helpful.
+- Reduce the exponent using the cycle length, then compute the reduced power.
+
+Example:
+Question: What is 7^128 (mod 10) ?
+1. Powers of 7 mod 10 cycle every 4
+2. 128 mod 4 = 0, so use 7^4 mod 10 = 1
+Answer: 1
+
+Now solve the user's problem and follow the same pattern. Keep the reasoning short.
+"""
 
 
 USER_PROMPT = """
@@ -56,6 +72,7 @@ def test_your_prompt(system_prompt: str) -> bool:
             options={"temperature": 0.3},
         )
         output_text = response.message.content
+        print(f"reason output: {output_text}")
         final_answer = extract_final_answer(output_text)
         if final_answer.strip() == EXPECTED_OUTPUT.strip():
             print("SUCCESS")

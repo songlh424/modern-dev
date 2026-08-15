@@ -15,7 +15,12 @@ Keep the implementation minimal.
 """
 
 # TODO: Fill this in!
-YOUR_REFLEXION_PROMPT = ""
+YOUR_REFLEXION_PROMPT = """
+You are an expert programmer. Your job is to critique and provide helpful feedback to correct the code provided.
+You need to improve the code based on the failing checks.
+You must provide your improved implementation in a single fenced Python code block.
+Keep the implementation minimal. No prose or comments.
+"""
 
 
 # Ground-truth test suite used to evaluate generated code
@@ -96,7 +101,13 @@ def your_build_reflexion_context(prev_code: str, failures: List[str]) -> str:
 
     Return a string that will be sent as the user content alongside the reflexion system prompt.
     """
-    return ""
+    return (
+        "This code dosen't work:\n\n"
+        f"{prev_code}\n\n"
+        "The function 'is_valid_password' failed the following test cases:\n"
+        f"{chr(10).join(failures)}\n\n"
+        "Please analyze the issues and provide an improved version of the function that address these failures\n"
+    )
 
 
 def apply_reflexion(
@@ -136,15 +147,27 @@ def run_reflexion_flow(
 
     # 2) Single reflexion iteration
     improved_code = apply_reflexion(reflexion_prompt, build_context, initial_code, failures)
-    print("\nImproved code:\n" + improved_code)
+    print("\nImproved code 1:\n" + improved_code)
     improved_func = load_function_from_code(improved_code)
     passed2, failures2 = evaluate_function(improved_func)
     if passed2:
         print("SUCCESS")
         return True
 
-    print("Tests still failing after reflexion:")
+    print("Tests still failing after reflexion1:")
     for f in failures2:
+        print("- " + f)
+
+    improved_code = apply_reflexion(reflexion_prompt, build_context, improved_code, failures2)
+    print("\nImproved code 2:\n" + improved_code)
+    improved_func = load_function_from_code(improved_code)
+    passed3, failures3 = evaluate_function(improved_func)
+    if passed3:
+        print("SUCCESS")
+        return True
+
+    print("Tests still failing after reflexion2:")
+    for f in failures3:
         print("- " + f)
     return False
 
